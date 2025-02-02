@@ -73,8 +73,20 @@ local function IsTankedByAnotherTank(unit)
 			targetOf = UnitName("targettarget") -- Nameplate is a target
 		elseif unit.isMouseover then
 			targetOf = UnitName("mouseovertarget") -- Nameplate is a mouseover
+		elseif unit.guid == UnitGUID("focus") then
+			targetOf = UnitName("focustarget") -- Nameplate is a focus (added by roman)
+		elseif unit.guid == UnitGUID("boss1") then
+			targetOf = UnitName("boss1target") -- Nameplate is a boss1 (added by roman)
+		elseif unit.guid == UnitGUID("boss2") then
+			targetOf = UnitName("boss2target") -- Nameplate is a boss2 (added by roman)
+		elseif unit.guid == UnitGUID("boss3") then
+			targetOf = UnitName("boss3target") -- Nameplate is a boss3 (added by roman)
+		elseif unit.guid == UnitGUID("boss4") then
+			targetOf = UnitName("boss4target") -- Nameplate is a boss4 (added by roman)
 		else
-			targetOf = TrackedUnitTargets[unit.guid]
+			-- targetOf = TrackedUnitTargets[unit.guid]
+			-- targetOf = TrackedUnits[unit.guid] TrackedUnitTargetHistory
+			targetOf = TrackedUnitTargetHistory[unit.guid]
 		end
 
 		if targetOf and TankNames[targetOf] then
