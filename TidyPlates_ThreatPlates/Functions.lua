@@ -329,6 +329,11 @@ do
 				local R = db.settings.raidicon.hpMarked[unit.raidIcon]
 				return R.r, R.g, R.b
 			else
+				played_is_tank = GetPartyAssignment("MAINTANK", "player") or GetPartyAssignment("MAINASSIST", "player")
+				if played_is_tank and unit.threatSituation == "LOW" and isTanked(unit) then
+					return 0.23, 0.61, 1  -- i dont wanna extend this addon, i just wanna "2nd tank" functionality (roman)
+				end
+
 				local T = db.settings[style].threatcolor[unit.threatSituation]
 				return T.r, T.g, T.b
 			end
@@ -489,6 +494,7 @@ do
 
 	local function SetThreatColor(unit)
 		local style = TidyPlatesThreat.SetStyle(unit)
+		local isTanked = TidyPlatesWidgets.IsTankedByAnotherTank
 		c.r, c.g, c.b, c.a = 0, 0, 0, 0
 
 		if style == "dps" or style == "tank" or style == "normal" and InCombatLockdown() then
@@ -496,6 +502,14 @@ do
 			c.g = TidyPlatesThreat.db.profile.settings[style]["threatcolor"][unit.threatSituation].g
 			c.b = TidyPlatesThreat.db.profile.settings[style]["threatcolor"][unit.threatSituation].b
 			c.a = TidyPlatesThreat.db.profile.settings[style]["threatcolor"][unit.threatSituation].a
+			
+			-- i dont wanna extend this addon, i just wanna "2nd tank" functionality (roman)
+			played_is_tank = GetPartyAssignment("MAINTANK", "player") or GetPartyAssignment("MAINASSIST", "player")
+			if played_is_tank and unit.threatSituation == "LOW" and isTanked(unit) then
+				c.r = 0.23
+				c.g = 0.61
+				c.b = 1
+			end
 		end
 
 		return c.r, c.g, c.b, c.a
